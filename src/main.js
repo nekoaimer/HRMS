@@ -5,16 +5,25 @@ import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import locale from 'element-ui/lib/locale/lang/en' // lang i18n
-
 import '@/styles/index.scss' // global css
 
 import App from './App'
 import store from './store'
 import router from './router'
+import * as directives from '@/directives'
+import { forEachValue } from './utils/tool-function'
+forEachValue(directives, (key, value) => {
+  Vue.directive(key, value)
+})
+
+// Object.keys(directives).forEach(directive => {
+//   console.log(directive, directives[directive]);
+//   Vue.directive(directive, directives[directive])
+// })
 
 import '@/icons' // icon
 import '@/permission' // permission control
-
+Vue.config.devtools = true;
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
@@ -41,3 +50,4 @@ new Vue({
   store,
   render: h => h(App)
 })
+
