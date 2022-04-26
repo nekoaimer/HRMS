@@ -45,7 +45,7 @@ export function parseTime(time, cFormat) {
   const time_str = format.replace(/{([ymdhisa])+}/g, (result, key) => {
     const value = formatObj[key]
     // Note: getDay() returns 0 on Sunday
-    if (key === 'a') { return ['日', '一', '二', '三', '四', '五', '六'][value ] }
+    if (key === 'a') { return ['日', '一', '二', '三', '四', '五', '六'][value] }
     return value.toString().padStart(2, '0')
   })
   return time_str
@@ -100,9 +100,9 @@ export function formatTime(time, option) {
  */
 export function param2Obj(url) {
   const search = decodeURIComponent(url.split('?')[1]).replace(/\+/g, ' ')
-  if (!search) {
-    return {}
-  }
+  console.log(url, search);
+  if (!search) return {}
+
   const obj = {}
   const searchArr = search.split('&')
   searchArr.forEach(v => {
@@ -114,4 +114,24 @@ export function param2Obj(url) {
     }
   })
   return obj
+}
+
+/*
+  递归计算部门父子级关系 pid与id关系：
+  如果id与pid相同，代表pid元素的父级是id相同的元素
+  注：传入的数组都是一维数组
+*/
+export function tranListToTreeData(list, rootValue) {
+  const array = []
+  list.forEach(item => {
+    // 如果id与pid相同 进入下面逻辑
+    if (rootValue == item.pid) {
+      // 需要进行递归 将每个item的id传入递归
+      const children = tranListToTreeData(list, item.id)
+      // 如果有子元素 都添加到它的父元素下
+      if (children.length) item.children = children
+      array.push(item)
+    }
+  })
+  return array
 }

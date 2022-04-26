@@ -4,7 +4,7 @@ import { Message } from 'element-ui'
 import { getTimeStamp } from './auth'
 import router from '@/router'
 
-const TimeOut = 3600 // 定义超时时间 1小时
+const TimeOut = 36000 // 定义超时时间 1小时
 
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API,
