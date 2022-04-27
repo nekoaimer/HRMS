@@ -1,20 +1,27 @@
 <template>
   <div class="dashboard-container">
     <div class="dashboard-text">name: {{ name }}</div>
+    <PageTools :showBefore="true">
+      <template slot="before">
+        <el-button type="primary"></el-button>
+      </template>
+      <template v-slot:after>
+        <el-button type="primary"></el-button>
+      </template>
+    </PageTools>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from "vuex";
 
 export default {
-  name: 'Dashboard',
+  name: "Dashboard",
   computed: {
-    ...mapGetters([
-      'name'
-    ])
-  }
-}
+    ...mapGetters(["name"]),
+  },
+  components: {},
+};
 </script>
 
 <style lang="scss" scoped>

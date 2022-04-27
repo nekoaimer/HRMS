@@ -1,4 +1,4 @@
-import { getDepartments, addDepartments } from "@/api/departments";
+import { getDepartments, addDepartments, getDepartDetail, uptateDepartments } from "@/api/departments";
 import { getEmployeeSimple } from "@/api/employees";
 export default {
   data() {
@@ -6,19 +6,32 @@ export default {
     const checkNameRepeat = async (rule, value, callback) => {
       // value 是部门名称 要去和同级部门下的部门比较
       const { depts } = await getDepartments();
+      let isRepeat = false
 
-      const isRepeat = depts
-        .filter((item) => item.pid === this.treeNode?.id)
-        .some((item) => item.name === value);
-      console.log(isRepeat, 123);
+      // 跟据id判断编辑模式与新增模式
+      if (this.formData.id) {
+        isRepeat = depts.filter(item => item.pid === this.treeNode.pid && item.id !== this.treeNode.id).some(item => item.name === value)
+      } else {
+        // 新增模式
+        isRepeat = depts
+          .filter((item) => item.pid === this.treeNode?.id)
+          .some((item) => item.name === value);
+      }
+
       isRepeat
         ? callback(new Error(`同级部门下已经存在${value}部门了`))
         : callback();
     };
     const checkCodeRepeat = async (rule, value, callback) => {
       const { depts } = await getDepartments();
+      let isRepeat = false
+      if (this.formData.id) {
+        isRepeat = depts.filter(item => item !== this.treeNode.id).some((item) => item.code === value && value);
+      } else {
+        // 新增模式
+        isRepeat = depts.some((item) => item.code === value && value);
 
-      const isRepeat = depts.some((item) => item.code === value && value);
+      }
       isRepeat
         ? callback(new Error(`组织架构下已经存在${value}编码了`))
         : callback();
@@ -100,26 +113,54 @@ export default {
       type: Boolean,
       default: false,
     },
+    treeNode: {
+      type: Object,
+      default: null
+    }
   },
   methods: {
     async getEmployeeSimple() {
       this.peoples = await getEmployeeSimple();
     },
+    // 获取详情方法
+    async getDepartDetail(id) {
+      this.formData = await getDepartDetail(id)
+      // console.log('this.formData', this.formData);
+    },
     btnOk() {
       this.$refs.deptForm.validate(async (isOk) => {
         if (isOk) {
-          await addDepartments({ ...this.formData, pid: this.treeNode?.id });
-          // update:xxx
+          // 有id进行编辑 否则新增
+          if (this.formData.id) {
+            await uptateDepartments(this.formData)
+          } else {
+            // 将ID设置成pid
+            await addDepartments({ ...this.formData, pid: this.treeNode?.id });
+          }
+
           this.$emit("addDepts");
+          // update:xxx sync修饰符
           this.$emit("update:showDialog", false);
         }
       });
     },
 
     btnCancel() {
+      // 重置数据 resetFields只能重置表单上的数据 非表单上的 比如id不能重置
+      this.formData = {
+        name: '',
+        code: '',
+        manager: '',
+        introduce: ''
+      }
+      // .sync修饰符
       this.$emit("update:showDialog", false);
       this.$refs.deptForm.resetFields()
-      console.log(this.showDialog);
     },
   },
+  computed: {
+    showTitle() {
+      return this.formData.id ? '编辑部门' : '新增部门'
+    }
+  }
 };
