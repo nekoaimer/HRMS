@@ -121,7 +121,7 @@ export function param2Obj(url) {
   如果id与pid相同，代表pid元素的父级是id相同的元素
   注：传入的数组都是一维数组
 */
-export function tranListToTreeData(list, rootValue) {
+export function tranListToTreeData(list, rootValue = '') {
   const array = []
   list.forEach(item => {
     // 如果id与pid相同 进入下面逻辑

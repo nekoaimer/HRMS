@@ -30,7 +30,7 @@ const actions = {
   async login(context, data) {
     const result = await login(data)
     context.commit('setToken', result)
-    console.log(result);
+    // console.log(result);
     setTimeStamp()
   },
   async getUserInfo(context) {
@@ -38,7 +38,7 @@ const actions = {
     const baseInfo = await getUserDetailById(result.userId)
     const baseResult = { ...result, ...baseInfo }
     context.commit('setUserInfo', baseResult)
-    console.log('baseResult', baseResult);
+    // console.log('baseResult', baseResult);
     return baseResult
   },
   logout(context) {

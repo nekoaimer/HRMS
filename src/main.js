@@ -11,14 +11,13 @@ import App from './App'
 import store from './store'
 import router from './router'
 import Components from '@/components'
+
+// 注册全局事件
 import * as directives from '@/directives'
-
-// 注册自定义指令
-import { forEachValue } from './utils/tool-function'
-forEachValue(directives, (key, value) => {
-  Vue.directive(key, value)
-})
-
+import * as filters from '@/filters'
+import { forEachDirectives, forEachFilters } from './utils/register'
+forEachDirectives(directives)
+forEachFilters(filters)
 
 import '@/icons' // icon
 import '@/permission' // permission control

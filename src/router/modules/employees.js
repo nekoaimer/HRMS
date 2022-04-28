@@ -14,6 +14,14 @@ export default {
         title: '员工管理', // 左侧导航读取了title属性
         icon: 'people'
       }
-  }
+    },
+    {
+      path: 'detail/:id?',
+      component: () => import('@/views/employees/detail'),
+      meta: {
+        title: '员工详情'
+      },
+      hidden: true, // 表示该内容不在左侧菜单栏显示
+    }
   ]
 }

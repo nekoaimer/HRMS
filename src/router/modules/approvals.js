@@ -1,6 +1,5 @@
 // 员工路由规则
 import Layout from '@/layout'
-console.log(Layout);
 export default {
   name: 'approvals',
   path: '/approvals',

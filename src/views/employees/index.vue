@@ -7,9 +7,19 @@
           <span slot="before"> 共16条记录 </span>
         </template>
         <template v-slot:after>
-          <el-button size="small" type="success"> execl导入 </el-button>
-          <el-button size="small" type="danger"> execl导出 </el-button>
-          <el-button size="small" type="primary"> 新增员工 </el-button>
+          <el-button
+            @click="$router.push('/import')"
+            size="small"
+            type="success"
+          >
+            execl导入
+          </el-button>
+          <el-button @click="exportData" size="small" type="danger">
+            execl导出
+          </el-button>
+          <el-button @click="showDialog = true" size="small" type="primary">
+            新增员工
+          </el-button>
         </template>
       </page-tools>
       <!-- 表格组件 -->
@@ -24,8 +34,18 @@
           sortable=""
         />
         <el-table-column prop="departmentName" label="部门" sortable="" />
-        <el-table-column prop="timeOfEntry" label="入职时间" sortable="" />
-        <el-table-column prop="enableState" label="账户状态" sortable="" />
+
+        <el-table-column prop="timeOfEntry" label="入职时间" sortable="">
+          <template v-slot="{ row }">
+            {{ row.timeOfEntry | formatDate }}
+          </template>
+        </el-table-column>
+
+        <el-table-column prop="enableState" label="账户状态" sortable="">
+          <template v-slot="{ row }">
+            <el-switch :value="row.enableState === 1"> </el-switch>
+          </template>
+        </el-table-column>
         <el-table-column
           prop="username"
           label="操作"
@@ -33,13 +53,20 @@
           fixed="right"
           width="280"
         >
-          <template>
-            <el-button type="text" size="small">查看</el-button>
+          <template v-slot="{ row }">
+            <el-button
+              @click="$router.push(`/employees/detail/${row.id}`)"
+              type="text"
+              size="small"
+              >查看</el-button
+            >
             <el-button type="text" size="small">转正</el-button>
             <el-button type="text" size="small">调岗</el-button>
             <el-button type="text" size="small">离职</el-button>
             <el-button type="text" size="small">角色</el-button>
-            <el-button type="text" size="small">删除</el-button>
+            <el-button @click="delEmployee(row.id)" type="text" size="small"
+              >删除</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -54,6 +81,7 @@
         ></el-pagination>
       </el-row>
     </div>
+    <addEmployee :showDialog.sync="showDialog"></addEmployee>
   </div>
 </template>
 
