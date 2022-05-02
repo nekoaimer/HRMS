@@ -330,7 +330,7 @@ export function updatedFile(file, obj, callback, func) {
     return false
   }
 }
-export function importFile(file, obj, callback, func) {
+export function importFilexml(file, obj, callback, func) {
   if (file.size < 10100000) {
     var fileName = file.name
     var suffix = fileName

@@ -68,7 +68,7 @@
 
 <script>
 import { applyeLave, startProcess } from '@/api/approvals'
-import commonApi from '@/api/constant/user'
+import commonApi from '@/constant/user'
 export default {
   name: 'UsersTableIndex',
   data() {

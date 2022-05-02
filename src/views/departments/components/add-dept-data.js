@@ -1,4 +1,4 @@
-import { getDepartments, addDepartments, getDepartDetail, uptateDepartments } from "@/api/departments";
+import { getDepartments, addDepartments, getDepartDetail, updateDepartments } from "@/api/departments";
 import { getEmployeeSimple } from "@/api/employees";
 export default {
   data() {

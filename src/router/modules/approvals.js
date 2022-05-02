@@ -1,18 +1,77 @@
-// 员工路由规则
 import Layout from '@/layout'
+
 export default {
-  name: 'approvals',
   path: '/approvals',
   component: Layout,
+  name: 'approvals',
   children: [
     {
-      // 二级路由的path什么都不写的时候 此时它表示二级路由的默认路由
-      path: '', // 这里不写表示 /approvals 不但有布局layout 还有员工主页
+      path: '',
       component: () => import('@/views/approvals'),
-      // 路由元信息 存储数据
+      name: 'approvals',
       meta: {
-        title: '审批', // 左侧导航读取了title属性
-        icon: 'tree'
+        title: '审批',
+        icon: 'tree-table'
+      }
+    },
+    {
+      path: 'salaryApproval/:id',
+      component: () => import('@/views/approvals/salary'),
+      name: 'salaryApproval',
+      hidden: true,
+      meta: {
+        title: '工资审核',
+        icon: 'approval', noCache: true
+      }
+    },
+    {
+      path: 'enterApproval/:id',
+      component: () => import('@/views/approvals/enter'),
+      name: 'enterApproval',
+      hidden: true,
+      meta: {
+        title: '入职审核',
+        icon: 'approval', noCache: true
+      }
+    },
+    {
+      path: 'leaveApproval/:id',
+      component: () => import('@/views/approvals/leave'),
+      name: 'leaveApproval',
+      hidden: true,
+      meta: {
+        title: '申请请假',
+        icon: 'approval', noCache: true
+      }
+    },
+    {
+      path: 'quitApproval/:id',
+      component: () => import('@/views/approvals/quit'),
+      name: 'quitApproval',
+      hidden: true,
+      meta: {
+        title: '申请离职',
+        icon: 'approval', noCache: true
+      }
+    },
+    {
+      path: 'overtimeApproval/:id',
+      component: () => import('@/views/approvals/overtime'),
+      name: 'overtimeApproval',
+      hidden: true,
+      meta: {
+        title: '加班申请',
+        icon: 'approval', noCache: true
+      }
+    },
+    {
+      path: 'securitySetting',
+      component: () => import('@/views/approvals/security'),
+      name: 'securitySetting',
+      hidden: true,
+      meta: {
+        title: '设置',
+        icon: 'approval', noCache: true
       }
     }
   ]

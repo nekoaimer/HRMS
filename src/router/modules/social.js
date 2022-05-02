@@ -1,19 +1,50 @@
-// 员工路由规则
+
 import Layout from '@/layout'
+
 export default {
-  name: 'social',
-  path: '/social',
+  path: '/social_securitys',
   component: Layout,
+  name: 'social_securitys',
   children: [
     {
-      // 二级路由的path什么都不写的时候 此时它表示二级路由的默认路由
-      path: '', // 这里不写表示 /employees 不但有布局layout 还有员工主页
+      path: '',
       component: () => import('@/views/social'),
-      // 路由元信息 存储数据
+      name: 'social_securitys',
       meta: {
-        title: '社保', // 左侧导航读取了title属性
+        title: '社保',
         icon: 'table'
+
+      }
+    },
+    // 报表
+    {
+      path: 'detail/:id',
+      hidden: true,
+      component: () => import('@/views/social/detail'),
+      name: 'socialDetail',
+      meta: {
+        title: '社保'
+      }
+    },
+    // 历史归档
+    {
+      path: 'historicalArchiving',
+      hidden: true,
+      component: () => import('@/views/social/historical'),
+      name: 'socialHistorical',
+      meta: {
+        title: '历史归档'
+      }
+    },
+    // 月报表
+    {
+      path: 'monthStatement',
+      component: () => import('@/views/social/month'),
+      name: 'socialMonthStatement',
+      hidden: true,
+      meta: {
+        title: '当月报表'
       }
     }
-  ],
+  ]
 }

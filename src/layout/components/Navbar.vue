@@ -6,20 +6,21 @@
       @toggleClick="toggleSideBar"
     />
     <div class="app-breadcrumb">
-      江苏传智播客教育科技股份有限公司
+      人力资源管理系统(●ˇ∀ˇ●)
       <span class="breadBtn">体验版</span>
     </div>
-    <breadcrumb class="breadcrumb-container" />
+    <!-- <breadcrumb class="breadcrumb-container" /> -->
 
     <div class="right-menu">
+      <!-- 放置多语言插件 -->
+      <lang-select class="right-menu-item" />
+      <!-- 放置全局插件 -->
+      <screen-full class="right-menu-item" />
+      <!-- 放置切换主题组件 -->
+      <theme-picker class="right-menu-item" />
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img
-            v-imagerror="defaultAvatar"
-            :src="staffPhoto"
-            class="user-avatar"
-          />
-          <!-- <img src="@/assets/common/bigUserHeader.png" class="user-avatar" /> -->
+          <img v-imagerror="defaultImg" :src="staffPhoto" class="user-avatar" />
           <span class="name">{{ name }}</span>
           <i class="el-icon-caret-bottom" />
         </div>
@@ -27,12 +28,11 @@
           <router-link to="/">
             <el-dropdown-item> Home </el-dropdown-item>
           </router-link>
-          <a target="_blank" href="https://github.com/nekoaimer/HRSaaS">
+          <a target="_blank" href="https://github.com/nekoaimer/HRMS">
             <el-dropdown-item>Github</el-dropdown-item>
           </a>
-
           <el-dropdown-item divided @click.native="logout">
-            <span style="display: block">Log Out</span>
+            <span style="display: block">Logout</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -42,30 +42,30 @@
 
 <script>
 import { mapGetters } from "vuex";
-import Breadcrumb from "@/components/Breadcrumb";
+// const { mapActions } = createNamespacedHelpers('user')
 import Hamburger from "@/components/Hamburger";
 
 export default {
-  data() {
-    return {
-      defaultAvatar: require("@/assets/common/avatar.png"),
-    };
-  },
   components: {
-    Breadcrumb,
     Hamburger,
   },
+  data() {
+    return {
+      defaultImg: require("@/assets/common/head.jpg"),
+    };
+  },
   computed: {
-    ...mapGetters(["sidebar", "avatar", "name", "staffPhoto"]),
+    ...mapGetters(["sidebar", "name", "staffPhoto"]),
   },
   methods: {
+    // ...mapActions(['lgout']),
     toggleSideBar() {
       this.$store.dispatch("app/toggleSideBar");
     },
     async logout() {
-      await this.$store.dispatch("user/logout");
-      // this.$router.push(`/login?redirect=${this.$route.fullPath}`);
-      this.$router.push(`/login`);
+      // this.lgout()
+      await this.$store.dispatch("user/logout"); // 这里不论写不写 await 登出方法都是同步的
+      this.$router.push(`/login`); // 跳到登录
     },
   },
 };
@@ -76,9 +76,9 @@ export default {
   height: 50px;
   overflow: hidden;
   position: relative;
-  // background: #fff;
-  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
   background-image: -webkit-linear-gradient(left, #3d6df8, #5b8cff);
+  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+
   .hamburger-container {
     line-height: 46px;
     height: 100%;
@@ -127,16 +127,14 @@ export default {
       vertical-align: middle;
       margin-left: 5px;
     }
-    .user-dropdown {
-      color: #fff;
-    }
+
     .right-menu-item {
       display: inline-block;
       padding: 0 8px;
       height: 100%;
       font-size: 18px;
       color: #5a5e66;
-      vertical-align: text-bottom;
+      vertical-align: middle;
 
       &.hover-effect {
         cursor: pointer;
@@ -154,6 +152,7 @@ export default {
       .avatar-wrapper {
         margin-top: 5px;
         position: relative;
+
         .user-avatar {
           cursor: pointer;
           width: 30px;
@@ -161,7 +160,9 @@ export default {
           border-radius: 15px;
           vertical-align: middle;
         }
-
+        .user-dropdown {
+          color: #fff;
+        }
         .el-icon-caret-bottom {
           cursor: pointer;
           position: absolute;

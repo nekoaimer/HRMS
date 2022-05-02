@@ -172,7 +172,7 @@ import {
   approvalsReject,
   getFlowList
 } from '@/api/approvals'
-import baseApi from '@/api/constant/approvals'
+import baseApi from '@/constant/approvals'
 import Quit from './components/quit'
 import Leave from './components/leave-job'
 import Overtime from './components/overtime'
