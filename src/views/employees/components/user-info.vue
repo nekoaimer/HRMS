@@ -37,7 +37,7 @@
       <el-row class="inline-info">
         <el-col :span="12">
           <el-form-item label="手机">
-            <el-input v-model="userInfo.mobile" />
+            <el-input v-model="userInfo.mobile" disabled />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -58,6 +58,7 @@
         <el-col :span="12">
           <el-form-item label="员工头像">
             <!-- 放置上传图片 -->
+            <image-upload ref="staffPhoto" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -91,6 +92,7 @@
 
         <el-form-item label="员工照片">
           <!-- 放置上传图片 -->
+          <image-upload ref="myStaffPhoto" />
         </el-form-item>
         <el-form-item label="国家/地区">
           <el-select v-model="formData.nationalArea" class="inputW2">
@@ -387,7 +389,139 @@
 </template>
 
 <script>
-export default {};
+import EmployeeEnum from "@/constant/employees";
+import { getUserDetailById } from "@/api/user";
+import {
+  getPersonalDetail,
+  saveUserDetailById,
+  updatePersonal,
+} from "@/api/employees";
+export default {
+  data() {
+    return {
+      userId: this.$route.params.id,
+      EmployeeEnum, // 员工枚举数据
+      userInfo: {},
+      formData: {
+        userId: "",
+        username: "", // 用户名
+        sex: "", // 性别
+        mobile: "", // 手机
+        companyId: "", // 公司id
+        departmentName: "", // 部门名称
+        //  onTheJobStatus: '', // 在职状态 no
+        dateOfBirth: "", // 出生日期
+        timeOfEntry: "", // 入职时间
+        theHighestDegreeOfEducation: "", // 最高学历
+        nationalArea: "", // 国家
+        passportNo: "", // 护照号
+        idNumber: "", // 身份证号
+        idCardPhotoPositive: "", // 身份证照正
+        idCardPhotoBack: "", // 身份证照正
+        nativePlace: "", // 籍贯
+        nation: "", // 民族
+        englishName: "", // 英文名字
+        maritalStatus: "", // 婚姻状况
+        staffPhoto: "", // 员工照片
+        birthday: "", // 生日
+        zodiac: "", // 属相
+        age: "", // 年龄
+        constellation: "", // 星座
+        bloodType: "", // 血型
+        domicile: "", // 户籍所在地
+        politicalOutlook: "", // 政治面貌
+        timeToJoinTheParty: "", // 入党时间
+        archivingOrganization: "", // 存档机构
+        stateOfChildren: "", // 子女状态
+        doChildrenHaveCommercialInsurance: "1", // 保险状态
+        isThereAnyViolationOfLawOrDiscipline: "", // 违法违纪状态
+        areThereAnyMajorMedicalHistories: "", // 重大病史
+        qq: "", // QQ
+        wechat: "", // 微信
+        residenceCardCity: "", // 居住证城市
+        dateOfResidencePermit: "", // 居住证办理日期
+        residencePermitDeadline: "", // 居住证截止日期
+        placeOfResidence: "", // 现居住地
+        postalAddress: "", // 通讯地址
+        contactTheMobilePhone: "", // 联系手机
+        personalMailbox: "", // 个人邮箱
+        emergencyContact: "", // 紧急联系人
+        emergencyContactNumber: "", // 紧急联系电话
+        socialSecurityComputerNumber: "", // 社保电脑号
+        providentFundAccount: "", // 公积金账号
+        bankCardNumber: "", // 银行卡号
+        openingBank: "", // 开户行
+        educationalType: "", // 学历类型
+        graduateSchool: "", // 毕业学校
+        enrolmentTime: "", // 入学时间
+        graduationTime: "", // 毕业时间
+        major: "", // 专业
+        graduationCertificate: "", // 毕业证书
+        certificateOfAcademicDegree: "", // 学位证书
+        homeCompany: "", // 上家公司
+        title: "", // 职称
+        resume: "", // 简历
+        isThereAnyCompetitionRestriction: "", // 有无竞业限制
+        proofOfDepartureOfFormerCompany: "", // 前公司离职证明
+        remarks: "", // 备注
+      },
+    };
+  },
+  created() {
+    this.getUserDetailById();
+    this.getPersonalDetail();
+  },
+  methods: {
+    async getUserDetailById() {
+      this.userInfo = await getUserDetailById(this.userId);
+      if (this.userInfo.staffPhoto && this.userInfo.staffPhoto.trim()) {
+        // 有值就表示 已经有了一个上传成功的图片了
+        // 上传成功的图片 upload: true 表示 该图片已经上传成功了
+        this.$refs.staffPhoto.fileList = [
+          { url: this.userInfo.staffPhoto, upload: true },
+        ];
+      }
+    },
+    async getPersonalDetail() {
+      this.formData = await getPersonalDetail(this.userId);
+      if (this.formData.staffPhoto && this.formData.staffPhoto.trim()) {
+        this.$refs.myStaffPhoto.fileList = [
+          { url: this.formData.staffPhoto, upload: true },
+        ];
+      }
+    },
+    async saveUser() {
+      // 先去获取头像中地址
+      const fileList = this.$refs.staffPhoto.fileList; // 数组
+      // 应该做一个判断 判断当前的图片有没有上传完成
+      if (fileList.some((item) => !item.upload)) {
+        // 说明此时有图片还没有上传完成
+        this.$message.warning("图片还未上传完成或腾讯云欠费停服");
+        return;
+      }
+      // staffPhoto由于接口问题 必须 给一个 有空格的字符串才能存进去
+      await saveUserDetailById({
+        ...this.userInfo,
+        staffPhoto: fileList.length ? fileList[0].url : " ",
+      });
+      this.$message.success("保存用户基本信息成功");
+    },
+    async savePersonal() {
+      const fileList = this.$refs.myStaffPhoto.fileList;
+      if (fileList.some((item) => !item.upload)) {
+        // 说明此时有图片还没有上传完成
+        this.$message.warning("此时还有图片没有上传完成");
+        return;
+      }
+      await updatePersonal({
+        ...this.formData,
+        staffPhoto: fileList.length ? fileList[0].url : " ",
+      });
+      this.$message.success("保存用户基础信息成功");
+    },
+  },
+};
 </script>
 
-
+<style>
+</style>
