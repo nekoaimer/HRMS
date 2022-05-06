@@ -10,7 +10,7 @@ import TagsView from './TagsView'
 export default {
   install(Vue) {
     // 组件的注册
-    Vue.component('PageTools', PageTools)
+    Vue.component('PageTools', PageTools) // 注册通用工具栏
     Vue.component('UploadExcel', UploadExcel) // 注册Excel导入导出组件
     Vue.component('ImageUpload', ImageUpload) // 注册图片上传组件
     Vue.use(Print) // 注册打印组件

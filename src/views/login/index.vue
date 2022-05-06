@@ -157,6 +157,7 @@ export default {
           }
         }
       });
+      this.$message.success("会根据您目前角色的权限，查看对应的内容~");
     },
   },
 };

@@ -129,6 +129,7 @@ export default {
     }
 
     .right-menu-item {
+      cursor: pointer;
       display: inline-block;
       padding: 0 8px;
       height: 100%;
